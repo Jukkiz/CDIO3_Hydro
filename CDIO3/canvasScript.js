@@ -46,9 +46,13 @@
 		canvas.style.width ='100%';
 		//se on liian korkea se canvas?
 		canvas.style.height='80%';
-		
+		GhostCanvas.style.width ='100%';
+		GhostCanvas.style.height='80%';
 		canvas.width  = canvas.offsetWidth;
 		canvas.height = canvas.offsetHeight;
+
+		GhostCanvas.width = GhostCanvas.offsetWidth;
+		GhostCanvas.height = GhostCanvas.offsetHeight;
 	
 		drawImages();
 	}
@@ -121,6 +125,7 @@
 	//window.onresize = setCanvas; <-- onko tämä sama asia kun addEventListener? toimii molemmilla.
     setCanvas();
 	area = setAreas(canvas.width, canvas.height);
+
 	  $(GhostCanvas).click(function(event) {
 
 		var position = getPosition(event);
@@ -138,7 +143,7 @@
 				
 				curr_area = area[i];
 				if(checkArea(mx, my, curr_area)) {
-				
+					ctx.clearRect(0,0,canvas.width, canvas.height);
 					//alert("Olen alue " + curr_area.id);
 					drawImages(curr_area);
 					i = area.length;
@@ -171,17 +176,29 @@
         mx = position.x;
         my = position.y;
 
+
         if (zoomed == false) {
 
         for (i = 0; i < area.length; i++) {
 
 			curr_area = area[i];
             if (checkArea(mx, my, curr_area)) {
-                ctx.strokeStyle = "blue";
-               ctx.strokeRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY);
-               //ctx.strokeRect(0, 0, 100, 100);
+
+            	ctx.clearRect(area[i].posX - 5, area[i].posY - 5, area[i].sizeX + 10, area[i].sizeY + 10);
+            	ctx.globalAlpha = 0.3;
+            	ctx.fillStyle = "#99CCFF";
+            	ctx.fillRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY);
+              	ctx.strokeStyle = "#0033CC";
+              	ctx.lineWidth=10;
+              	ctx.strokeRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY);
+                //ctx.strokeRect(0, 0, 10, 10);
+            }
+            else
+            {
+            	ctx.clearRect(area[i].posX - 5, area[i].posY - 5, area[i].sizeX + 10, area[i].sizeY + 10);
             }
         }
+
    		}
    		}, false);
 
