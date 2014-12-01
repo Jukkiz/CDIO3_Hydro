@@ -152,7 +152,26 @@
 		}
 		else
 		{
-			//modal tähän!!
+			zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
+
+			for(i=0; i< images.length; i++) {
+		
+			//var elementX = images[i];
+				var element = zoomedImages[i];
+			
+				if (element.parent == curr_area.id)	
+				{
+			
+				//alert("posx" + elementX.posX);
+				//alert('posx ' + element.posX + ' posY' + element.posY + "leveys" +canvas.width);
+					if ( checkCoordinates (mx, my, element) ) 
+					{
+						alert("Olen palikka " + element.id);
+						i = images.length;
+					}
+				}
+					
+			}
 		}
 				
 		//vanha piirto, kun klikattiin palikoita koko näytöllä
