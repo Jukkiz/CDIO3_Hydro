@@ -1,6 +1,6 @@
 ﻿<html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="style\mainstyle.css">
+		 <link rel="stylesheet" type="text/css" media="(max-width: 1600px)" href="style\mainstyle.css">
 		 <meta charset="UTF-8"> 
 		 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 		 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
