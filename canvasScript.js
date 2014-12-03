@@ -166,7 +166,30 @@
 				//alert('posx ' + element.posX + ' posY' + element.posY + "leveys" +canvas.width);
 					if ( checkCoordinates (mx, my, element) ) 
 					{
-						alert("Olen palikka " + element.id);
+						$(this).addClass("active");
+           			 $cur = $(this);
+
+           			 var teksti = "<h1>Kone "+element.id+"</h1></br></br><table><tr><td class='jobRow'>Työ Lisätietoa klikkaamalla</td></tr><tr><td class='jobRow'>Työ Lisätietoa klikkaamalla</td></tr></table>";
+           			 
+
+           			 $("#modalDialog").html(teksti);
+
+            		$("#modalDialog").dialog({
+              		  modal: true,
+               		 draggable: true,
+                		position: { my: "center", at: "top+75", of: window },
+                		width: 500,
+                		buttons: {
+	                    "Sulje" : function(){
+	                        $(this).dialog("close");
+	                    }
+	                },
+                	close: function(e, ui){
+                 	   $cur.removeClass("active");
+                  	  document.getElementById("modalDialog").title = "kakka";
+               		},
+                	title: $(this).html()
+				});	
 						i = images.length;
 					}
 				}

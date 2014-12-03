@@ -2,7 +2,7 @@ var WIDTH = $(window).width();
 var HEIGHT = $(window).height();
 
 $(document).ready(function(){
-    for(var i = 0; i < 10; i++){
+    for(var i = 0; i < 11; i++){
         $(".jobsTable").append("<tr><td class='jobRow'>Työ "+(i+1)+"</td></tr>");
     }
 
