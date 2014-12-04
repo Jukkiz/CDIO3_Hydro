@@ -30,9 +30,15 @@
 //------------------------------------------------------------------------//
 
 //mitä aluetta klikataan?
-	function checkArea (mouseX, mouseY, area) {
-		return (area.posX <= mouseX) && (area.posX + area.sizeX >= mouseX) &&
-			(area.posY <= mouseY) && (area.posY + area.sizeY >= mouseY);
+function checkArea (mouseX, mouseY, area) {
+	return (area.posX <= mouseX) && (area.posX + area.sizeX >= mouseX) &&
+		(area.posY <= mouseY) && (area.posY + area.sizeY >= mouseY);
+}
+	
+//Popup poistetaan, kun hiiri ei majaile enää canvasilla:
+	function RemoveDrawings(mx, my) 
+	{
+		return mx >= canvas.width-50 || mx <= 50 || my >= canvas.height-50 || my <= 50;
 	}
 	
 //pistetään canvas kondikseen ja piirretään sitten kuvat (suoritetaan vain alussa)
@@ -116,7 +122,7 @@
 
 //esitellään muuttujat ja asetetaan clickille ja resizelle kuuntelu
 
-	var canvas, context, images, area ;
+	var canvas, context, images, area, tooltip, tipcontext;
 	var img, posX, posY, sizeY, sizeX, pw, ph;
 	var curr_area;
 	var zoomed = new Boolean(0); //tsekataan onko zoom
@@ -128,14 +134,14 @@
 
 	  $(GhostCanvas).click(function(event) {
 
+		tooltip.style.left = "-200px"; 
+		
 		var position = getPosition(event);
 		mx = position.x;
 		my = position.y;
 
 	  if (zoomed == false) {
-	  
-			
-			
+
 			img = new Image();
 			area = setAreas(canvas.width, canvas.height);
 
@@ -144,7 +150,6 @@
 				curr_area = area[i];
 				if(checkArea(mx, my, curr_area)) {
 					ctx.clearRect(0,0,canvas.width, canvas.height);
-					//alert("Olen alue " + curr_area.id);
 					drawImages(curr_area);
 					i = area.length;
 				}
@@ -155,15 +160,11 @@
 			zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
 
 			for(i=0; i< images.length; i++) {
-		
-			//var elementX = images[i];
+
 				var element = zoomedImages[i];
 			
 				if (element.parent == curr_area.id)	
 				{
-			
-				//alert("posx" + elementX.posX);
-				//alert('posx ' + element.posX + ' posY' + element.posY + "leveys" +canvas.width);
 					if ( checkCoordinates (mx, my, element) ) 
 					{
 						$(this).addClass("active");
@@ -217,7 +218,11 @@
         var position = getPosition(evt);
         mx = position.x;
         my = position.y;
-
+		
+		//LISÄYS: pop up, tapahtuu piirrosten jälkeen.
+		tooltip = document.getElementById("popup");
+		tipcontext = tooltip.getContext("2d");
+		var str = "Jotain tärkeää";
 
         if (zoomed == false) {
 
@@ -225,21 +230,36 @@
 
 			curr_area = area[i];
             if (checkArea(mx, my, curr_area)) {
-
+			
             	ctx.clearRect(area[i].posX - 5, area[i].posY - 5, area[i].sizeX + 10, area[i].sizeY + 10);
             	ctx.globalAlpha = 0.3;
             	ctx.fillStyle = "#99CCFF";
             	ctx.fillRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY);
               	ctx.strokeStyle = "#0033CC";
               	ctx.lineWidth=10;
-              	ctx.strokeRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY);
-                //ctx.strokeRect(0, 0, 10, 10);
+              	ctx.strokeRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY); 
+				
+				//tämä on nyt vaan heitetty alueen oikeaan reunaan puolet popupin koosta reunaan:
+				tooltip.style.left = ((curr_area.posX + curr_area.sizeX) - tooltip.width/2) + "px";
+				
+				tooltip.style.top = (curr_area.posY + 20) + "px";
+				tipcontext.clearRect(0,0, tooltip.width, tooltip.height);
+				
+				//fontti pitäisi määrittää canvasin koon mukaan varmaan jo heti alkuunsa, pitää korjata!
+				tipcontext.font = 'italic 30pt Calibri';
+				tipcontext.fillText(str, 10, 50);
+				
             }
             else
             {
+			
+			//tämä ei toimi koska piirros on ihan kiinni reunassa. 
+			//ratkaisu olisi lisätä vähän reunaa kuvalle, että mouseposition ehtii tajuta muutoksen. (malli tooltipillä)
             	ctx.clearRect(area[i].posX - 5, area[i].posY - 5, area[i].sizeX + 10, area[i].sizeY + 10);
             }
         }
+			//pistetään tooltip pois kun liikutaan tarpeeksi reunaan:
+			if ( RemoveDrawings(mx, my) ) {	tooltip.style.left = "-200px"; 	}
 
    		}
    		else
@@ -248,14 +268,11 @@
 
 			for(i=0; i< images.length; i++) {
 		
-			//var elementX = images[i];
 				var element = zoomedImages[i];
 			
 				if (element.parent == curr_area.id)	
 				{
 			
-				//alert("posx" + elementX.posX);
-				//alert('posx ' + element.posX + ' posY' + element.posY + "leveys" +canvas.width);
 					if ( checkCoordinates (mx, my, element) ) 
 					{
 						ctx.clearRect(element.posX - 5, element.posY - 5, element.sizeX + 10, element.sizeY + 10);
@@ -275,15 +292,6 @@
 			}
    		}
    		}, false);
-
-	  $(myCanvas).mouseover(function(event) {
-
-	  	var position = getPosition(event);
-		mx = position.x;
-		my = position.y;
-		
-			
-	  });
 	  
 	  $("#fullView").click(function(event) {
 			

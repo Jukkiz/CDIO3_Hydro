@@ -67,6 +67,17 @@ canvas
     left:0;
     width:inherit;
 }
+#popup 
+{
+	z-index:3;
+    background-color:white;
+    border:1px solid blue;
+	border-radius:3px;
+	box-shadow: 5px 5px 5px black;/*#888888;*/
+    position:absolute;
+    left:-200px;
+    top:100px;
+}
 .asd{
 	width:300px;
 	height:100px;
