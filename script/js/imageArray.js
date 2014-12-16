@@ -77,10 +77,10 @@ return zoomedImages;
 
 function setAreas(width, height) {
 area = new Array (
-     { 'id':'upper_left',  'posX':0,          'posY':0,               'sizeX':width*0.4, 'sizeY':height*0.55 },
-     { 'id':'upper_right', 'posX':width*0.43,  'posY':0,               'sizeX':width*0.45, 'sizeY':height*0.5},
-     { 'id':'bottom_left', 'posX':0,          'posY':height*0.6,      'sizeX':width*0.55, 'sizeY':height*0.5},
-     { 'id':'bottom_right','posX':width*0.57,  'posY':height*0.35, 'sizeX':width*0.43, 'sizeY':height*0.6}
+     { 'id':'upper_left',  'posX':10,          'posY':10,               'sizeX':width*0.4, 'sizeY':height*0.55 },
+     { 'id':'upper_right', 'posX':width*0.43,  'posY':10,               'sizeX':width*0.45, 'sizeY':height*0.5},
+     { 'id':'bottom_left', 'posX':10,          'posY':height*0.6,      'sizeX':width*0.52, 'sizeY':height*0.38},
+     { 'id':'bottom_right','posX':width*0.57,  'posY':height*0.35, 'sizeX':width*0.42, 'sizeY':height*0.58}
 );
 return area;
 }

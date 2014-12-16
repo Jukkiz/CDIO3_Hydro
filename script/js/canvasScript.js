@@ -52,11 +52,11 @@ function checkArea (mouseX, mouseY, area) {
 		canvas.style.width ='100%';
 		//se on liian korkea se canvas?
 		canvas.style.height='80%';
-		GhostCanvas.style.width ='100%';
-		GhostCanvas.style.height='80%';
+
 		canvas.width  = canvas.offsetWidth;
 		canvas.height = canvas.offsetHeight;
-
+		GhostCanvas.style.width ='75%';
+		GhostCanvas.style.height='79%';
 		GhostCanvas.width = GhostCanvas.offsetWidth;
 		GhostCanvas.height = GhostCanvas.offsetHeight;
 	
@@ -229,6 +229,7 @@ function checkArea (mouseX, mouseY, area) {
         for (i = 0; i < area.length; i++) {
 
 			curr_area = area[i];
+
             if (checkArea(mx, my, curr_area)) {
 			
             	ctx.clearRect(area[i].posX - 5, area[i].posY - 5, area[i].sizeX + 10, area[i].sizeY + 10);

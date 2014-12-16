@@ -20,39 +20,53 @@ td, tr
 	border-bottom: 1px solid;
 	font-size: 9px;
 }
-.jugebutton, .jugevalittu
-{
-	background: #3498db;
-  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-  background-image: -o-linear-gradient(top, #3498db, #2980b9);
-  background-image: linear-gradient(to bottom, #3498db, #2980b9);
-  -webkit-border-radius: 13;
-  -moz-border-radius: 13;
-  border-radius: 13px;
-  font-family: Arial;
-  color: #ffffff;
-  font-size: 13px;
-  padding: 5px 10px 5px 10px;
-  text-decoration: none;
+.jugebutton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #dcecfb;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #dcecfb;
+	box-shadow:inset 0px 1px 0px 0px #dcecfb;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #bddbfa), color-stop(1, #80b5ea));
+	background:-moz-linear-gradient(top, #bddbfa 5%, #80b5ea 100%);
+	background:-webkit-linear-gradient(top, #bddbfa 5%, #80b5ea 100%);
+	background:-o-linear-gradient(top, #bddbfa 5%, #80b5ea 100%);
+	background:-ms-linear-gradient(top, #bddbfa 5%, #80b5ea 100%);
+	background:linear-gradient(to bottom, #bddbfa 5%, #80b5ea 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bddbfa', endColorstr='#80b5ea',GradientType=0);
+	background-color:#bddbfa;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	border:1px solid #84bbf3;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #528ecc;
+	width: 120px;
 }
-.jugevalittu
-{
-	background: #000000;
-  background-image: -webkit-linear-gradient(top, #000000, #2980b9);
-  background-image: -moz-linear-gradient(top, #000000, #2980b9);
-  background-image: -ms-linear-gradient(top, #000000, #2980b9);
-  background-image: -o-linear-gradient(top, #000000, #2980b9);
-  background-image: linear-gradient(to bottom, #000000, #2980b9);
+.jugebutton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #80b5ea), color-stop(1, #bddbfa));
+	background:-moz-linear-gradient(top, #80b5ea 5%, #bddbfa 100%);
+	background:-webkit-linear-gradient(top, #80b5ea 5%, #bddbfa 100%);
+	background:-o-linear-gradient(top, #80b5ea 5%, #bddbfa 100%);
+	background:-ms-linear-gradient(top, #80b5ea 5%, #bddbfa 100%);
+	background:linear-gradient(to bottom, #80b5ea 5%, #bddbfa 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#80b5ea', endColorstr='#bddbfa',GradientType=0);
+	background-color:#80b5ea;
+}
+.jugebutton:active {
+	position:relative;
+	top:1px;
+}
 
 }
 
 canvas
 {
 	border: 1px solid;
-	width: 100%;
-	height: 80%;
 }
 #myCanvas
 {
@@ -63,9 +77,6 @@ canvas
 {
     z-index:2;
     position:absolute;
-    top:0;
-    left:0;
-    width:inherit;
 }
 #popup 
 {
