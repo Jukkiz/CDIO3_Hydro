@@ -140,7 +140,7 @@ function checkArea (mouseX, mouseY, area) {
 		mx = position.x;
 		my = position.y;
 
-	  if (zoomed == false) {
+		if (zoomed == false) {
 
 			img = new Image();
 			area = setAreas(canvas.width, canvas.height);
@@ -168,30 +168,56 @@ function checkArea (mouseX, mouseY, area) {
 					if ( checkCoordinates (mx, my, element) ) 
 					{
 						$(this).addClass("active");
-           			 $cur = $(this);
+						$cur = $(this);
 
-           			 var teksti = "<h1>Kone "+element.id+"</h1></br></br><table><tr><td class='jobRow'>Työ Lisätietoa klikkaamalla</td></tr><tr><td class='jobRow'>Työ Lisätietoa klikkaamalla</td></tr></table>";
-           			 
-
-           			 $("#modalDialog").html(teksti);
-
-            		$("#modalDialog").dialog({
-              		  modal: true,
-               		 draggable: true,
-                		position: { my: "center", at: "top+75", of: window },
-                		width: 500,
-                		buttons: {
-	                    "Sulje" : function(){
-	                        $(this).dialog("close");
-	                    }
-	                },
-                	close: function(e, ui){
-                 	   $cur.removeClass("active");
-                  	  document.getElementById("modalDialog").title = "kakka";
-               		},
-                	title: $(this).html()
-				});	
-						i = images.length;
+						$("#modalDialog").empty();
+						var jqxhr = $.ajax({
+							url: "php/kone.php",
+							type: "post"
+						});
+						jqxhr.success(function(response, textStatus, jqXHR){
+						
+						var ParseSon = JSON.parse(response);
+						$("#modalDialog").append("<h1>Koneen tiedot</h1>");
+						 
+						$("#modalDialog").append("<p>Koneryhmä " + ParseSon[0].GroupID + "</p><h4>Koneet</h4>");
+						
+						var machineList = "<ul>"
+						$.each(ParseSon[0].Machines, function(key , value){
+							console.log(value);
+							machineList += "<li>"+value['MachineID']+"</li>";
+						});
+						machineList += "</ul>";
+						
+						$("#modalDialog").append(machineList);  
+						$("#modalDialog").append("<h4>Ryhmän työt</h4>");
+				
+						var työtable = "<table id='test'><td>Työnumero</td><td>Tila</td>";
+						$.each(ParseSon[0].Work, function(key , value){
+							työtable += "<tr><td>"+value['WorkNumber']+"</td><td>"+value['Status']+"</td></tr>";
+						});
+						työtable += "</table>";
+						 $("#modalDialog").append(työtable);
+						
+				
+						$("#modalDialog").dialog({
+							modal: true,
+							draggable: true,
+							position: { my: "center", at: "center", of: window },
+							width: 500,
+							buttons: {
+								"Sulje" : function(){
+									$(this).dialog("close");
+								}
+							},
+							close: function(e, ui){
+							   $cur.removeClass("active");
+							  
+							},
+							title: $(this).html()
+						});	
+							i = images.length;
+						});
 					}
 				}
 					
