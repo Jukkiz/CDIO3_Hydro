@@ -45,7 +45,7 @@ td, tr
 	padding:6px 24px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #528ecc;
-	width: 120px;
+	width: 50%;
 }
 .jugebutton:hover {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #80b5ea), color-stop(1, #bddbfa));
@@ -93,8 +93,20 @@ canvas
 	width:300px;
 	height:100px;
 }
+.jobstable{
+	border:solid 1px #99CCFF;
+	box-shadow: 2px 2px 2px #888888;
+}
+.jobRow{
+	padding:5px;
+	text-align:center;
+	font-size:12px;
+}
 .jobRow:hover{
-	background-color: green;
+	color:white;
+	font-weight:bold;
+	font-size:14px;
+	background-color: #99CCFF;
 }
 
 .mainPanel
@@ -115,7 +127,19 @@ canvas
 	height: 50%;
 	padding: 10px;
 }
-
+.searchField{
+	float:left;
+	width:79%;
+	font-size:14px;
+	height:30px;
+	border-radius:7px;
+	border-bottom-right-radius: 0px;
+	border-top-right-radius: 0px;
+}
+.searchField:focus{
+	outline:none;
+	box-shadow: 0 0 10px #99CCFF;
+}
 .roundEdges
 {
 	-webkit-border-top-left-radius: 10px;
@@ -135,15 +159,19 @@ canvas
 
 .floatLeft
 {
-	-webkit-border-top-right-radius: 10px;
-	-webkit-border-bottom-right-radius: 10px;
-	-moz-border-radius-topright: 10px;
-	-moz-border-radius-bottomright: 10px;
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
+	height:30px;
+	font-size:12px;
+	background:#dddddd;
+	font-weight:bold;
 	float:left;
 }
-
+#searchDiv{
+	margin-top:60px;
+	margin-bottom:120px;
+}
+#buttonDiv{
+	margin-bottom:10px;
+}
 .clearFloat
 {
 	float: clear;
@@ -170,7 +198,28 @@ canvas
 #modalDialog{
 	display: none;
 }
-
+.tableWorks{
+	border: 1px solid black;
+	
+}
+.thWorks{
+	color:white;
+	background-color:#005FBF;
+	padding-right:25px;
+	padding-left:25px;
+	font-weight:bold;
+	font-size:16px;
+}
+.tdWorks{
+	font-size:12px;
+	padding:5px;
+}
+.trWorks:nth-child(even){
+	background-color:#99CCFF;
+}
+.dialogHead{
+		color:#99CCFF;
+}
 input:focus
 {
 	outline: none;

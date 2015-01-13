@@ -26,11 +26,14 @@
 		
 		<!-- Haku ja listaus -->
 		<div class="rightPanel">
-			<input type="text" class="roundEdges" id="searchBox"></input>
-			<input type="button" value="Hae" class="floatLeft"></input>
-			
-			<input type="button" value="Työt" class="JugeButton"></input>
-			<input type="button" value="Asiakkaat" class="JugeButton"></input>
+			<div id="searchDiv">
+				<input type="text" class="searchField" id="searchBox"></input>
+				<input type="button" value="Hae" class="floatLeft"></input>
+			</div>
+			<div id="buttonDiv">
+				<input type="button" id="Jugetyot" value="Työt" class="JugeButton"></input>
+				<input type="button" id="JugeAsiakkaat" style="float:right" value="Asiakkaat" class="JugeButton"></input>
+			</div>
 			<!-- Tablen runko, sisältö AJAXista -->
 			<table class="jobsTable"></table>
 			

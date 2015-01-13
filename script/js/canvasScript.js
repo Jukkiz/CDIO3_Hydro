@@ -167,8 +167,8 @@ function checkArea (mouseX, mouseY, area) {
 				{
 					if ( checkCoordinates (mx, my, element) ) 
 					{
-						$(this).addClass("active");
-						$cur = $(this);
+						//$(this).addClass("active"); what happens here
+						//$cur = $(this);
 
 						$("#modalDialog").empty();
 						var jqxhr = $.ajax({
@@ -178,23 +178,23 @@ function checkArea (mouseX, mouseY, area) {
 						jqxhr.success(function(response, textStatus, jqXHR){
 						
 						var ParseSon = JSON.parse(response);
-						$("#modalDialog").append("<h1>Koneen tiedot</h1>");
+						$("#modalDialog").append("<h1 class='dialogHead' >Koneen tiedot</h1>");
 						 
-						$("#modalDialog").append("<p>Koneryhmä " + ParseSon[0].GroupID + "</p><h4>Koneet</h4>");
+						$("#modalDialog").append("<h2 class='dialogHead'> Koneryhmä " + ParseSon[0].GroupID + "</h2>");
 						
-						var machineList = "<ul>"
+						var machineList = "<table class='tableWorks'><tr><th class='thWorks'>Ryhmän koneet</th></tr>"
 						$.each(ParseSon[0].Machines, function(key , value){
 							console.log(value);
-							machineList += "<li>"+value['MachineID']+"</li>";
+							machineList += "<tr class='trWorks'><td class='tdWorks'>"+value['MachineID']+"</td></tr>";
 						});
-						machineList += "</ul>";
+						machineList += "</table>";
 						
 						$("#modalDialog").append(machineList);  
-						$("#modalDialog").append("<h4>Ryhmän työt</h4>");
+						$("#modalDialog").append("<h2 class='dialogHead'>Ryhmän työt</h2>");
 				
-						var työtable = "<table id='test'><td>Työnumero</td><td>Tila</td>";
+						var työtable = "<table class='tableWorks' ><th class='thWorks' >Työnumero</th><th class='thWorks'>Tila</th>";
 						$.each(ParseSon[0].Work, function(key , value){
-							työtable += "<tr><td>"+value['WorkNumber']+"</td><td>"+value['Status']+"</td></tr>";
+							työtable += "<tr class='trWorks' ><td class='tdWorks'>"+value['WorkNumber']+"</td><td class='tdWorks'>"+value['Status']+"</td></tr>";
 						});
 						työtable += "</table>";
 						 $("#modalDialog").append(työtable);
