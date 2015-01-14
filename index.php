@@ -35,9 +35,10 @@
 				<input type="button" id="JugeAsiakkaat" style="float:right" value="Asiakkaat" class="JugeButton"></input>
 			</div>
 			<!-- Tablen runko, sisältö AJAXista -->
-			<table class="jobsTable"></table>
-			
-			<div class="info">
+			<div id="scrollTable">
+				<table class="jobsTable"></table>
+			</div>	
+				<div class="info">
 				<p>Tarkempaa informaatiota koskien valittua tilausta <br></br>(Ylemmässä aktiivisena)</p>
 			</div>
 		</div>

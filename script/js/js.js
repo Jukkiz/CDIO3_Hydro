@@ -31,11 +31,10 @@ function GetOrders()
 	jqxhr.success(function(response, textStatus, jqXHR){
 		
 		var ParseSon = JSON.parse(response);
-		
+		console.log(ParseSon);
 		$.each(ParseSon, function(key, value){
-			console.log(value);
-			console.log(value.tyonro);
-			$(".jobsTable").append("<tr><td class='jobRow'><p>"+value.tyonro+"</p></td></tr>");		
+
+			$(".jobsTable").append("<tr><td class='jobRow'><p>"+value.WorkNumber+"</p></td></tr>");		
 		});
 		SetJobListener();
 	});
@@ -73,7 +72,7 @@ function SetClientListener()
 				
 				var ParseSon = JSON.parse(response);
 				$("#modalDialog").append("<h1 class='dialogHead' >Asiakkaan tiedot</h1>");
-				
+				console.log(ParseSon);
 				$("#modalDialog").append("<h1 class='dialogHead' >Asiakas "+ParseSon[0].nimi+"</h1>");
 				$("#modalDialog").append("<h1 class='dialogHead' >Asiakas "+ParseSon[0].asiakasnumero+"</h1>");
 				

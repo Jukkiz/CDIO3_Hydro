@@ -97,6 +97,10 @@ canvas
 	border:solid 1px #99CCFF;
 	box-shadow: 2px 2px 2px #888888;
 }
+#scrollTable{
+	height: 300px;
+	overflow: auto;
+}
 .jobRow{
 	padding:5px;
 	text-align:center;
