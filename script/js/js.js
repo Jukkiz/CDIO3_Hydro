@@ -97,22 +97,25 @@ function SetClientListener()
 function SetJobListener()
 {
 	$(".jobRow").click(function(){
+			
             $(this).addClass("active");
             $cur = $(this);
 
             $("#modalDialog").empty();
-			var jqxhr = $.ajax({
-							url: "php/tilaus.php",
-							type: "post"
-			});
+			var jqxhr = $.get(
+							"php/tilaukset.php",
+							{item: ""+$(this).find('p').text()+""}
+			);
 			jqxhr.success(function(response, textStatus, jqXHR){
 
 			
 				var ParseSon = JSON.parse(response);
+				console.log(ParseSon);
 				$("#modalDialog").append("<h1 class='dialogHead' >Tilauksen tiedot</h1>");
 				
-				$("#modalDialog").append("<h3>Tilausnumero : "+ ParseSon[0].tyonro +"</h3>");
-				$("#modalDialog").append("<h4>Tilauksen status : "+ ParseSon[0].status +"</h4>");
+				$("#modalDialog").append("<h3>Tilausnumero : "+ ParseSon[0].WorkNumber +"</h3>");
+				$("#modalDialog").append("<h4>Tilauksen status : "+ ParseSon[0].Status1 +"</h4>");
+				$("#modalDialog").append("<h4>Tilauksen info : "+ ParseSon[0].Info +"</h4>");
 				$("#modalDialog").append("<h3>Tilauksen historia</h3>");
 				
 				$("#modalDialog").dialog({

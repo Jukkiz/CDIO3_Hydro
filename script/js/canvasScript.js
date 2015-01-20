@@ -135,11 +135,10 @@ function checkArea (mouseX, mouseY, area) {
 	  $(GhostCanvas).click(function(event) {
 
 		tooltip.style.left = "-200px"; 
-		
 		var position = getPosition(event);
 		mx = position.x;
 		my = position.y;
-
+		
 		if (zoomed == false) {
 
 			img = new Image();
@@ -149,9 +148,11 @@ function checkArea (mouseX, mouseY, area) {
 				
 				curr_area = area[i];
 				if(checkArea(mx, my, curr_area)) {
-					ctx.clearRect(0,0,canvas.width, canvas.height);
+					
+					alert(curr_area.id);
 					drawImages(curr_area);
 					i = area.length;
+					ctx.clearRect(0,0,canvas.width, canvas.height);
 				}
 			}
 		}
@@ -168,7 +169,7 @@ function checkArea (mouseX, mouseY, area) {
 					if ( checkCoordinates (mx, my, element) ) 
 					{
 						//$(this).addClass("active"); what happens here
-						//$cur = $(this);
+						$cur = $(this);
 
 						$("#modalDialog").empty();
 						var jqxhr = $.ajax({
@@ -275,6 +276,7 @@ function checkArea (mouseX, mouseY, area) {
 				//fontti pitäisi määrittää canvasin koon mukaan varmaan jo heti alkuunsa, pitää korjata!
 				tipcontext.font = 'italic 30pt Calibri';
 				tipcontext.fillText(str, 10, 50);
+				i = area.length;
 				
             }
             else
@@ -299,7 +301,6 @@ function checkArea (mouseX, mouseY, area) {
 			
 				if (element.parent == curr_area.id)	
 				{
-			
 					if ( checkCoordinates (mx, my, element) ) 
 					{
 						ctx.clearRect(element.posX - 5, element.posY - 5, element.sizeX + 10, element.sizeY + 10);

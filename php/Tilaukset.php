@@ -4,6 +4,10 @@ require_once("db.inc");
 if(isset($_GET['item']))
 {
 	$item = $_GET['item'];
+	$result = $conn->prepare("SELECT ItemCode FROM workcard WHERE WorkNumber LIKE :ic");
+	$result->execute(array(':ic' => '%'.$item.'%'));
+	$item = $result->fetchColumn();
+
 }
 else
 {
