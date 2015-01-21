@@ -28,7 +28,14 @@
 			(element.posY <= mouseY) && (element.posY + element.sizeY >= mouseY);	
 	 }	
 //------------------------------------------------------------------------//
-
+//piirretään nuoli joka vie takaisin normaalinäkymään
+function drawBackButton() {
+		var backbutton = new Image();
+		backbutton.src = "images/Back.png"; 			
+		backbutton.onload = function() {
+					ctx.drawImage(backbutton, 5, 5, 25, 25 );
+		};
+	}
 //mitä aluetta klikataan?
 function checkArea (mouseX, mouseY, area) {
 	return (area.posX <= mouseX) && (area.posX + area.sizeX >= mouseX) &&
@@ -143,13 +150,15 @@ function checkArea (mouseX, mouseY, area) {
 		
 			img = new Image();
 			area = setAreas(canvas.width, canvas.height);
-
+			
 			for (i=0; i< area.length; i++){
 				
 				curr_area = area[i];
 				if(checkArea(mx, my, curr_area)) {
 					ctx.clearRect(0,0,canvas.width, canvas.height);
+					drawBackButton();//takas nappi
 					drawImages(curr_area);
+					
 					i = area.length;
 					
 				}
@@ -158,6 +167,12 @@ function checkArea (mouseX, mouseY, area) {
 		else
 		{
 			zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
+			
+			//takaisin normaalinäkymään
+			if(((5<= mx) && (30 >= mx) &&(5 <= my) && (30 >= my))){
+					drawImages();
+			}
+			
 
 			for(i=0; i< images.length; i++) {
 
