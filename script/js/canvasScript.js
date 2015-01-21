@@ -122,29 +122,11 @@ function checkArea (mouseX, mouseY, area) {
 
 //esitellään muuttujat ja asetetaan clickille ja resizelle kuuntelu
 
-	var canvas, context, images, area, tooltip, tipcontext, buttons;
+	var canvas, context, images, area, tooltip, tipcontext;
 	var img, posX, posY, sizeY, sizeX, pw, ph;
 	var curr_area;
 	var zoomed = new Boolean(0); //tsekataan onko zoom
 
-	//jokainen takas nappi vissiin pakko olla ihan oma tapaus koska joka alue on ihan erilainen ja skaalautuu eri suhteessa:
-	//tosin ne venyy miten sattuu riippuen näytöstä.. korjataan kun jaksaa
-	function drawBackButton() {
-		
-		buttons = setBackButtons(curr_area); //curr area on jo määritelty
-		var backbutton = new Image();
-		backbutton.src = "images/Back.png"; 
-					
-		backbutton.onload = function() {
-			
-			for(i=0;i<buttons.length;i++){
-				if(buttons[i].owner == curr_area.id){
-					context.drawImage(backbutton, buttons[i].posX, buttons[i].posY, buttons[i].sizeX, buttons[i].sizeY );
-					i=buttons.length;
-				}
-			}
-		};
-	}
 	//window.onresize = setCanvas; <-- onko tämä sama asia kun addEventListener? toimii molemmilla.
     setCanvas();
 	area = setAreas(canvas.width, canvas.height);
@@ -168,7 +150,6 @@ function checkArea (mouseX, mouseY, area) {
 				if(checkArea(mx, my, curr_area)) {
 					ctx.clearRect(0,0,canvas.width, canvas.height);
 					drawImages(curr_area);
-					drawBackButton(mx,my); //piirretään takaisin nappi!!!!!!!!!!!!
 					i = area.length;
 					
 				}
@@ -177,19 +158,6 @@ function checkArea (mouseX, mouseY, area) {
 		else
 		{
 			zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
-			
-			/*kun on zoomattu, katsotaan klikataanko vasenta ylälaitaa
-			mx ja my on ylälaidassa nolla, vaikka siihen olis piirretty joku paska
-			
-			Eli, jos piirrät vaikka upper right alueen vasenpaan laitaan jonkun kökön
-			ja sen posX olisi 400, niin mx:n pos olisi silti nolla, alueesta riippumatta.
-			*/
-			for(i=0;i<buttons.length;i++){
-			if(buttons[i].owner == curr_area.id){
-				if(((5<= mx) && (45 >= mx) &&(5 <= my) && (45 >= my))){
-					drawImages();
-				}
-			}}
 
 			for(i=0; i< images.length; i++) {
 

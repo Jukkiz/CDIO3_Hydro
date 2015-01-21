@@ -84,13 +84,3 @@ area = new Array (
 );
 return area;
 }
-function setBackButtons(curr_area) {
-
-	backButton = new Array (
-	{"owner":"upper_left", "posX":2, "posY":2, "sizeX": 20, "sizeY":25},
-	{"owner":"upper_right", "posX":curr_area.posX + 5, "posY":2, "sizeX": 25, "sizeY":25},
-	{"owner":"bottom_left", "posX":curr_area.posX, "posY":curr_area.posY-45, "sizeX": 25, "sizeY":25},
-	{"owner":"bottom_right", "posX":curr_area.posX-110, "posY":curr_area.posY+5, "sizeX": 25, "sizeY":20}
-	);
-return backButton;
-}
