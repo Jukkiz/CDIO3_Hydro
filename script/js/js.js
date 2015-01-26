@@ -1,10 +1,19 @@
 var WIDTH = $(window).width();
 var HEIGHT = $(window).height();
+var dialogX;
+var dialogY;
 
 $(document).ready(function(){
 	GetOrders();
 	var worksTimer = setInterval(GetOrders, 60*1000);
 	var clientTimer;
+	
+	var buttonLocation = $("#settingsButton").position();
+	dialogX = buttonLocation.left - $("#settingsButton").width() - 300;
+	dialogY = buttonLocation.top+ $("#settingsButton").height() +5;
+	
+	$(".settingsDialog").css("left", dialogX);
+	$(".settingsDialog").css("top", dialogY);
 	
 	$("#Jugetyot").click(function(){
 		GetOrders();
@@ -18,7 +27,6 @@ $(document).ready(function(){
 		clearInterval(worksTimer);
 		
 	});
-	
 });
 
 function GetOrders()
@@ -132,4 +140,13 @@ function SetJobListener()
 								});
         });
     });
+}
+
+function showSettings(){
+	if($(".settingsDialog").css("display") == 'none'){
+		$(".settingsDialog").css("display", 'inline');
+		
+	}else{
+		$(".settingsDialog").css("display", 'none');
+	}
 }

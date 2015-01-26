@@ -18,14 +18,14 @@
 			<canvas id = "popup" style="width:10%; height:10%;"></canvas>
 			<canvas id = "GhostCanvas"></canvas>
 			<canvas id = "myCanvas"></canvas>
-            
-
+			
             <a id ="fullView">Takaisin</a>
 			<!--<img src="pohja.jpg"></img>-->
 		</div>
 		
 		<!-- Haku ja listaus -->
 		<div class="rightPanel">
+			<input type="button" class="JugeButton" id="settingsButton" value="Asetukset" onClick="showSettings()"></input>
 			<div id="searchDiv">
 				<input type="text" class="searchField" id="searchBox"></input>
 				<input type="button" value="Hae" class="floatLeft"></input>
@@ -44,5 +44,8 @@
 		</div>
 		<script src="script/js/js.js"></script>
 		<script src="script/js/canvasScript.js"></script> <!-- Sonjan lisäys -->
+		<div class='settingsDialog'>
+			<p>Päivitysnopeus:<br><input type='text' id='updateSpeed'></input></p><br><input type='button' value='Tallenna' class='JugeButton'></input>
+		</div>
 	</body>
 </html>
