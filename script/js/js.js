@@ -12,6 +12,7 @@ $(document).ready(function(){
 	dialogX = buttonLocation.left - $("#settingsButton").width() - 300;
 	dialogY = buttonLocation.top+ $("#settingsButton").height() +5;
 	
+	/*Asetetaan dialogin sijainti näytöllä*/
 	$(".settingsDialog").css("left", dialogX);
 	$(".settingsDialog").css("top", dialogY);
 	
