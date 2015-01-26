@@ -9,8 +9,8 @@ $(document).ready(function(){
 	var clientTimer;
 	
 	var buttonLocation = $("#settingsButton").position();
-	dialogX = buttonLocation.left - $("#settingsButton").width() - 300;
-	dialogY = buttonLocation.top+ $("#settingsButton").height() +5;
+	dialogX = buttonLocation.left - $("#settingsButton").width() - 150;
+	dialogY = buttonLocation.top+ $("#settingsButton").height() + 15;
 	
 	/*Asetetaan dialogin sijainti näytöllä*/
 	$(".settingsDialog").css("left", dialogX);
