@@ -1,5 +1,6 @@
 var WIDTH = $(window).width();
 var HEIGHT = $(window).height();
+var curSpeed = 1; //Kerroin updatelle
 var dialogX;
 var dialogY;
 
@@ -18,7 +19,7 @@ $(document).ready(function(){
 	
 	$("#Jugetyot").click(function(){
 		GetOrders();
-		worksTimer = setInterval(GetOrders, 60*1000);
+		worksTimer = setInterval(GetOrders, curSpeed * (60*1000));
 		clearInterval(clientTimer);
 	});
 	
@@ -146,8 +147,18 @@ function SetJobListener()
 function showSettings(){
 	if($(".settingsDialog").css("display") == 'none'){
 		$(".settingsDialog").css("display", 'inline');
-		
+		$("#updateSpeed").val(curSpeed);
 	}else{
 		$(".settingsDialog").css("display", 'none');
+	}
+}
+
+function updateSpeed(){
+	try{
+		curSpeed = parseInt($("#updateSpeed").val());
+		$(".settingsDialog").css("display", "none");
+	}
+	catch(err) {
+		window.alert("Päivitysnopeudessa voi käyttää vain numeroarvoja");
 	}
 }

@@ -45,7 +45,10 @@
 		<script src="script/js/js.js"></script>
 		<script src="script/js/canvasScript.js"></script> <!-- Sonjan lisäys -->
 		<div class='settingsDialog'>
-			<p>Päivitysnopeus:<br><input type='text' id='updateSpeed'></input></p><br><input type='button' value='Tallenna' class='JugeButton'></input>
+			<p>Päivitysnopeus:<br>
+			<input type='text' id='updateSpeed' style="width: 50px"></input>
+			</p><br>
+			<input type='button' value='Tallenna' class='JugeButton' onClick="updateSpeed()"></input>
 		</div>
 	</body>
 </html>
