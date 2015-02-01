@@ -183,7 +183,7 @@ function checkArea (mouseX, mouseY, area) {
 					if ( checkCoordinates (mx, my, element) ) 
 					{
 						//$(this).addClass("active"); what happens here
-						//$cur = $(this);
+						$cur = $(this);
 
 						$("#modalDialog").empty();
 						var jqxhr = $.ajax({
