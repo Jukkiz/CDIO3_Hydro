@@ -86,7 +86,6 @@ function SetClientListener()
 				$("#modalDialog").append("<h2 class='dialogHead' >Asiakas: "+ParseSon[0].nimi+"</h2>");
 				$("#modalDialog").append("<h2 class='dialogHead' >Asiakasnumero: "+ParseSon[0].asiakasnumero+"</h2>");
 				///// Tähän väliin tyot
-				//// tyolist taulukko, johon asiakkaan työt
 				//////Jokaisen löytyvän työobjetkin perusteella tungetaan näkymään työnro, info sekä status
 				$.each(ParseSon[0].tyot, function(key , value){
 				$("#modalDialog").append("<h3 class='dialogHead' >Työnro: "+value['tyonro']+", työn info: "+value['info']+", työn status: "+value['status']+"</h3>");
