@@ -28,14 +28,16 @@ while($r = $result->fetch(PDO::FETCH_ASSOC))
 	$machines[] = array('MachineID' => $m_id, 'ResourceName' => $r_name);
 }
 
-$result2 = $conn->prepare("SELECT WorkCard.WorkNumber, WorkCard.Status1 FROM WorkPhase INNER JOIN WorkCard ON WorkPhase.ItemCodePhase = WorkCard.ItemCode INNER JOIN Resource ON WorkPhase.GroupID = Resource.MachineID WHERE Resource.GroupID LIKE :group");
+//$result2 = $conn->prepare("SELECT WorkCard.WorkNumber, WorkCard.Status1 FROM WorkPhase INNER JOIN WorkCard ON WorkPhase.ItemCodePhase = WorkCard.ItemCode INNER JOIN Resource ON WorkPhase.GroupID = Resource.MachineID WHERE Resource.GroupID LIKE :group");
+$result2 = $conn->prepare("SELECT WorkPhase.WorkNumber, WorkPhase.Description FROM WorkPhase INNER JOIN WorkCard ON WorkPhase.ItemCodePhase = WorkCard.ItemCode INNER JOIN Resource ON WorkPhase.GroupID = Resource.MachineID WHERE WorkPhase.StartTime IS NOT NULL AND WorkPhase.FinishTIme IS NULL AND Resource.GroupID LIKE :group");
+//"SELECT WorkPhase.WorkNumber, WorkPhase.Description FROM WorkPhase INNER JOIN WorkCard ON WorkPhase.ItemCodePhase = WorkCard.ItemCode INNER JOIN Resource ON WorkPhase.GroupID = resource.MachineID WHERE Resource.GroupID LIKE :group" 
 
 $result2->execute(array(':group' => '%'.$group.'%'));
 while($r2 = $result2->fetch(PDO::FETCH_ASSOC))
 {
 	$worknumber = $r2['WorkNumber'];
-	$status = $r2['Status1'];
-	$works[] = array('WorkNumber' => $worknumber, 'Status' => $status);
+	$description = $r2['Description'];
+	$works[] = array('WorkNumber' => $worknumber, 'Description' => $description);
 }
 
 $arr = array(array('GroupID' => $group, 'Machines' => $machines, 'Work' => $works));

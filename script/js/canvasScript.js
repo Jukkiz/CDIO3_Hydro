@@ -1,3 +1,17 @@
+//Funktio hakee töiden lukumäärät eri alueilla!
+	function getJobCount() {
+
+	var jqxhr = $.ajax({
+					url: "php/tyoMaarat.php",
+					type: "post"
+		});
+		jqxhr.success(function(response, textStatus, jqXHR){
+			AreasJobCounts = JSON.parse(response);
+			console.log(AreasJobCounts);
+
+			DrawInfoBoxes();
+		});
+	}
 
 //etsii hiiren sijainnin kartalla
 	function getPosition(e) {
@@ -31,6 +45,9 @@
 //Jokaisen alueen tiedot esitettynä!
 function DrawInfoBoxes()
 {
+	infos.clearRect(0,0, infos.width, infos.height);
+	console.log(AreasJobCounts);
+	
 	infos.globalAlpha = 1;
 	Areas = setAreas(canvas.width, canvas.height);
 	for( i = 0 ; i < Areas.length ; i++)
@@ -49,12 +66,12 @@ function DrawInfoBoxes()
 		infos.fillStyle = "#000000";
 		infos.fillText(str,(Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2) + 10, Areas[i].posY  + 85);
 		//Työ lukumäärä!
-		var str = "Töiden lukumäärä xxx " ;
+		var str = "Töiden lukumäärä " + AreasJobCounts[Areas[i].id].AreasWorks;
 		infos.font="14px Arial"
 		infos.fillStyle = "#000000";
 		infos.fillText(str,(Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2) + 10, Areas[i].posY + 115);
 		//Työt myöhässä
-		var str = "Töitä myöhässä xxx " ;
+		var str = "Töitä myöhässä " + AreasJobCounts[Areas[i].id].LateWorks; ;
 		infos.font="14px Arial"
 		infos.fillStyle = "#000000";
 		infos.fillText(str,(Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2) + 10, Areas[i].posY + 135);
@@ -151,7 +168,6 @@ function checkArea (mouseX, mouseY, area) {
 				$("#fullView").show();
 				context.save();
 				
-				
 				zoomed = true;
 
 				
@@ -161,7 +177,7 @@ function checkArea (mouseX, mouseY, area) {
 				}
 				else if(area.id == "upper_right") {
 					context.translate(-canvas.width,0);
-					context.scale(2.3,2.0);		
+					context.scale(2.5,1.8);		
 				}
 				else if(area.id == "bottom_left") {
 					context.translate(0,-canvas.height);
@@ -171,7 +187,8 @@ function checkArea (mouseX, mouseY, area) {
 					context.translate(-canvas.width, -canvas.height);
 					context.scale(2.2,2.8);
 				}
-				
+				ctx.clearRect(0,0,canvas.width, canvas.height);
+				drawBackButton();
 			}
 			images = setImages(canvas.width, canvas.height);
 			context.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -199,13 +216,16 @@ function checkArea (mouseX, mouseY, area) {
 	var canvas, context, images, area, tooltip, tipcontext;
 	var img, posX, posY, sizeY, sizeX, pw, ph;
 	var curr_area;
-	var zoomed = new Boolean(0); //tsekataan onko zoom
+	var AreasJobCounts; // objekti työ lukumäärälle
+	//var worksCount = setInterval(getJobCount, 60*1000); //Timeri hakee töiden lkm joka x sekuntti
 
+	var zoomed = new Boolean(0); //tsekataan onko zoom
 	//window.onresize = setCanvas; <-- onko tämä sama asia kun addEventListener? toimii molemmilla.
     setCanvas();
 	area = setAreas(canvas.width, canvas.height);
 
-	DrawInfoBoxes();
+	getJobCount();
+
 	  $(GhostCanvas).click(function(event) {
 
 		tooltip.style.left = "-200px"; 
@@ -223,6 +243,7 @@ function checkArea (mouseX, mouseY, area) {
 				
 				curr_area = area[i];
 				if(checkArea(mx, my, curr_area)) {
+					//clearInterval(worksCount);	
 					ctx.clearRect(0,0,canvas.width, canvas.height);
 					drawBackButton();//takas nappi
 					
@@ -231,8 +252,7 @@ function checkArea (mouseX, mouseY, area) {
 					drawImages(curr_area);
 					
 					zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
-					i = area.length;
-					
+					i = area.length;			
 				}
 			}
 		}
@@ -240,11 +260,12 @@ function checkArea (mouseX, mouseY, area) {
 		{
 			zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
 			
-			//takaisin normaalinäkymään
+			//takaisin normaalinäkymään (Yläkulman back nappi)
 			if(((5<= mx) && (30 >= mx) &&(5 <= my) && (30 >= my))){
 					drawImages();
 					ClearInfos();
 					DrawInfoBoxes();
+					//worksCount = setInterval(getJobCount, 60*1000);
 			}
 			
 
@@ -261,6 +282,7 @@ function checkArea (mouseX, mouseY, area) {
 
 						
 						$("#modalDialog").empty();
+
 						var jqxhr = $.get( "php/kone.php", { machine: element.id});
 						
 						jqxhr.success(function(response, textStatus, jqXHR){
@@ -280,19 +302,19 @@ function checkArea (mouseX, mouseY, area) {
 						$("#modalDialog").append(machineList);  
 						$("#modalDialog").append("<h2 class='dialogHead'>Ryhmän työt</h2>");
 				
-						var työtable = "<table class='tableWorks' ><th class='thWorks' >Työnumero</th><th class='thWorks'>Tila</th§>";
+						var työtable = "<div id='duh'><table class='tableWorks' ><th class='thWorks' >Työnumero</th><th class='thWorks'>Kuvaus</th§>";
 						$.each(ParseSon[0].Work, function(key , value){
-							työtable += "<tr class='trWorks' ><td class='tdWorks'>"+value['WorkNumber']+"</td><td class='tdWorks'>"+value['Status']+"</td></tr>";
+							työtable += "<tr class='trWorks' ><td class='tdWorks'>"+value['WorkNumber']+"</td><td class='tdWorks'>"+value['Description']+"</td></tr>";
 						});
-						työtable += "</table>";
+						työtable += "</table></div>";
 						 $("#modalDialog").append(työtable);
-						
+						$("#duh").css("height", "300px");
 				
 						$("#modalDialog").dialog({
 							modal: true,
 							draggable: true,
 							position: { my: "center", at: "center", of: window },
-							width: 500,
+							width: 800,
 							buttons: {
 								"Sulje" : function(){
 									$(this).dialog("close");
@@ -345,7 +367,7 @@ function checkArea (mouseX, mouseY, area) {
 			curr_area = area[i];
 
             if (checkArea(mx, my, curr_area)) {
-			
+				
             	ctx.clearRect(area[i].posX - 5, area[i].posY - 5, area[i].sizeX + 10, area[i].sizeY + 10);
             	ctx.globalAlpha = 0.3;
             	ctx.fillStyle = "#99CCFF";

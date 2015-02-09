@@ -7,6 +7,7 @@ var dialogY;
 $(document).ready(function(){
 	GetOrders();
 	var worksTimer = setInterval(GetOrders, 60*1000);
+
 	var clientTimer;
 	
 	var buttonLocation = $("#settingsButton").position();
