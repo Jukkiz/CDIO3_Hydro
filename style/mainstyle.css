@@ -91,6 +91,11 @@ canvas
     z-index:-1;
     position:relative;
 }
+#InfoCanvas
+{
+    z-index:1;
+    position:absolute;
+}
 #GhostCanvas
 {
     z-index:2;

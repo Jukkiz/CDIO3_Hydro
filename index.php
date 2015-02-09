@@ -17,9 +17,9 @@
 			<!-- Onko lie miten tyhmää tehdä tästäkin canvas... -->
 			<canvas id = "popup" style="width:10%; height:10%;"></canvas>
 			<canvas id = "GhostCanvas"></canvas>
+			<canvas id = "InfoCanvas"></canvas>
 			<canvas id = "myCanvas"></canvas>
-			
-            <a id ="fullView">Takaisin</a>
+
 			<!--<img src="pohja.jpg"></img>-->
 		</div>
 		

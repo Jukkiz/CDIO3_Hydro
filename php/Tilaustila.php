@@ -1,10 +1,17 @@
 <?php
-$arr = array(array('WorkNumber' => 'TIL001', 'Time' => '10:20:30'),
-		array('WorkNumber' => 'TIL002', 'Time' => '01:02:03'),
-		array('WorkNumber' => 'TIL003', 'Time' => '00:01:02')
-		);
+require_once("db.inc");
 
-$jsonData = json_encode($arr);
-			
-echo $jsonData;
+$result = $conn->prepare("SELECT ItemCodePhase, StartTime FROM workphase 
+							WHERE FinishTime IS NULL AND StartTime Is NOT NULL
+							ORDER BY StartTime ASC");
+$result->execute();
+$arr = array();
+
+while($r = $result->fetch(PDO::FETCH_ASSOC))
+{
+	$arr[] = $r;
+}
+
+$JSONdata = json_encode($arr);
+echo $JSONdata;
 ?>

@@ -28,11 +28,66 @@
 			(element.posY <= mouseY) && (element.posY + element.sizeY >= mouseY);	
 	 }	
 //------------------------------------------------------------------------//
+//Jokaisen alueen tiedot esitettynä!
+function DrawInfoBoxes()
+{
+	infos.globalAlpha = 1;
+	Areas = setAreas(canvas.width, canvas.height);
+	for( i = 0 ; i < Areas.length ; i++)
+	{
+		//Piirretään info laatikot jokaiselle alueelle!!
+		infos.strokeStyle = "#FF9999";
+		infos.lineWidth = 5;
+		infos.fillStyle = "#ffffff";
+		infos.fillRect((Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2), Areas[i].posY + 50, 200, 100); 
+		infos.strokeRect((Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2), Areas[i].posY + 50, 200, 100); 
+		
+		//Info laatikoiden teksti sisältö
+		//Otsikko
+		var str = "Alue " + Areas[i].id;
+		infos.font="24px Arial"
+		infos.fillStyle = "#000000";
+		infos.fillText(str,(Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2) + 10, Areas[i].posY  + 85);
+		//Työ lukumäärä!
+		var str = "Töiden lukumäärä xxx " ;
+		infos.font="14px Arial"
+		infos.fillStyle = "#000000";
+		infos.fillText(str,(Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2) + 10, Areas[i].posY + 115);
+		//Työt myöhässä
+		var str = "Töitä myöhässä xxx " ;
+		infos.font="14px Arial"
+		infos.fillStyle = "#000000";
+		infos.fillText(str,(Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2) + 10, Areas[i].posY + 135);
+
+	}
+}
+//punanen neliö koneen päällä jos siinä jotain hälyttävää!!!
+function AlertArea(MachineID, SelectedArea)
+{
+	SelectedArea = setZoomedImages(canvas.width, canvas.height, SelectedArea);
+	infos.globalAlpha = 0.5;
+	
+	for( var i = 0 ; i < SelectedArea.length ; i++)
+	{
+		test = SelectedArea[i];
+
+		if(test.id == MachineID)
+		{
+			infos.fillStyle = "#FF9999";
+		    infos.fillRect(test.posX, test.posY, test.sizeX, test.sizeY);
+		}
+	}
+}
+function ClearInfos()
+{
+	infos.clearRect(0,0, 2000, 1000);
+}
 //piirretään nuoli joka vie takaisin normaalinäkymään
 function drawBackButton() {
 		var backbutton = new Image();
 		backbutton.src = "images/Back.png"; 			
 		backbutton.onload = function() {
+					ctx.globalAlpha = 1;
 					ctx.drawImage(backbutton, 5, 5, 25, 25 );
 		};
 	}
@@ -55,6 +110,9 @@ function checkArea (mouseX, mouseY, area) {
 		context = canvas.getContext('2d');
 		GhostCanvas = document.getElementById('GhostCanvas');
 	    ctx = GhostCanvas.getContext('2d');
+		
+		InfoCanvas = document.getElementById('InfoCanvas');
+	    infos = InfoCanvas.getContext('2d');
 
 		canvas.style.width ='100%';
 		//se on liian korkea se canvas?
@@ -62,11 +120,16 @@ function checkArea (mouseX, mouseY, area) {
 
 		canvas.width  = canvas.offsetWidth;
 		canvas.height = canvas.offsetHeight;
+		
 		GhostCanvas.style.width ='75%';
 		GhostCanvas.style.height='79%';
 		GhostCanvas.width = GhostCanvas.offsetWidth;
 		GhostCanvas.height = GhostCanvas.offsetHeight;
 	
+		InfoCanvas.style.width ='75%';
+		InfoCanvas.style.height='79%';
+		InfoCanvas.width = InfoCanvas.offsetWidth;
+		InfoCanvas.height = InfoCanvas.offsetHeight;
 		drawImages();
 	}
 //tätä kutsutaan kokoajan. jos parametri, ollaan zoomaamassa, jos ei mennään normitilaan.
@@ -83,11 +146,15 @@ function checkArea (mouseX, mouseY, area) {
 		img.onload = function() {
 		
 			if (area != undefined) {
-			
+
 				//näytetaan "takaisin" linkki
 				$("#fullView").show();
 				context.save();
+				
+				
 				zoomed = true;
+
+				
 				
 				if(area.id == "upper_left") {
 					context.scale(2.5,1.8);
@@ -123,7 +190,7 @@ function checkArea (mouseX, mouseY, area) {
 			}
 		};
 		//img.src = "testi.jpg";;
-	   img.src = "images/testipohja.jpg";;
+	   img.src = "images/testipohja.jpg";
 	}
 //------------------------------------------------------------//
 
@@ -138,6 +205,7 @@ function checkArea (mouseX, mouseY, area) {
     setCanvas();
 	area = setAreas(canvas.width, canvas.height);
 
+	DrawInfoBoxes();
 	  $(GhostCanvas).click(function(event) {
 
 		tooltip.style.left = "-200px"; 
@@ -157,8 +225,12 @@ function checkArea (mouseX, mouseY, area) {
 				if(checkArea(mx, my, curr_area)) {
 					ctx.clearRect(0,0,canvas.width, canvas.height);
 					drawBackButton();//takas nappi
+					
+					ClearInfos();
+					AlertArea(12141, area[i]);
 					drawImages(curr_area);
 					
+					zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
 					i = area.length;
 					
 				}
@@ -171,6 +243,8 @@ function checkArea (mouseX, mouseY, area) {
 			//takaisin normaalinäkymään
 			if(((5<= mx) && (30 >= mx) &&(5 <= my) && (30 >= my))){
 					drawImages();
+					ClearInfos();
+					DrawInfoBoxes();
 			}
 			
 
@@ -185,11 +259,10 @@ function checkArea (mouseX, mouseY, area) {
 						//$(this).addClass("active"); what happens here
 						$cur = $(this);
 
+						
 						$("#modalDialog").empty();
-						var jqxhr = $.ajax({
-							url: "php/kone.php",
-							type: "post"
-						});
+						var jqxhr = $.get( "php/kone.php", { machine: element.id});
+						
 						jqxhr.success(function(response, textStatus, jqXHR){
 						
 						var ParseSon = JSON.parse(response);
@@ -207,7 +280,7 @@ function checkArea (mouseX, mouseY, area) {
 						$("#modalDialog").append(machineList);  
 						$("#modalDialog").append("<h2 class='dialogHead'>Ryhmän työt</h2>");
 				
-						var työtable = "<table class='tableWorks' ><th class='thWorks' >Työnumero</th><th class='thWorks'>Tila</th>";
+						var työtable = "<table class='tableWorks' ><th class='thWorks' >Työnumero</th><th class='thWorks'>Tila</th§>";
 						$.each(ParseSon[0].Work, function(key , value){
 							työtable += "<tr class='trWorks' ><td class='tdWorks'>"+value['WorkNumber']+"</td><td class='tdWorks'>"+value['Status']+"</td></tr>";
 						});
@@ -281,6 +354,7 @@ function checkArea (mouseX, mouseY, area) {
               	ctx.lineWidth=10;
               	ctx.strokeRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY); 
 				
+				/*
 				//tämä on nyt vaan heitetty alueen oikeaan reunaan puolet popupin koosta reunaan:
 				tooltip.style.left = ((curr_area.posX + curr_area.sizeX) - tooltip.width/2) + "px";
 				
@@ -290,7 +364,8 @@ function checkArea (mouseX, mouseY, area) {
 				//fontti pitäisi määrittää canvasin koon mukaan varmaan jo heti alkuunsa, pitää korjata!
 				tipcontext.font = 'italic 30pt Calibri';
 				tipcontext.fillText(str, 10, 50);
-				
+				*/
+				i = area.length;
             }
             else
             {
@@ -324,6 +399,8 @@ function checkArea (mouseX, mouseY, area) {
 		              	ctx.strokeStyle = "#0033CC";
 		              	ctx.lineWidth=10;
 		              	ctx.strokeRect(element.posX, element.posY, element.sizeX, element.sizeY);
+						
+						i = images.length;
 					}
 					else
 		            {

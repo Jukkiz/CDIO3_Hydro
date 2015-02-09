@@ -21,4 +21,5 @@ while($r = $result->fetch(PDO::FETCH_ASSOC))
 
 $JSONdata = json_encode($arr);
 echo $JSONdata;
+
 ?>

@@ -61,7 +61,7 @@ function GetClients()
 		
 		$.each(ParseSon, function(key, value){
 			console.log(value);
-			$(".jobsTable").append("<tr><td class='jobRow'><p>"+value.nimi+"</p></td></tr>");		
+			$(".jobsTable").append("<tr><td class='jobRow'><p>"+value.Name+"</p></td></tr>");		
 		});
 		SetClientListener();
 	});
@@ -73,21 +73,19 @@ function SetClientListener()
             $cur = $(this);
 
 			$("#modalDialog").empty();
-            $("#modalDialog").empty();
-			var jqxhr = $.ajax({
-							url: "php/Asiakas.php",
-							type: "post"
-			});
+			
+			var jqxhr = $.get( "php/asiakas.php", { client: $(this).text() } );
+			
 			jqxhr.success(function(response, textStatus, jqXHR){
-				
+
 				var ParseSon = JSON.parse(response);
 				$("#modalDialog").append("<h1 class='dialogHead' >Asiakkaan tiedot</h1>");
 				console.log(ParseSon);
-				$("#modalDialog").append("<h2 class='dialogHead' >Asiakas: "+ParseSon[0].nimi+"</h2>");
-				$("#modalDialog").append("<h2 class='dialogHead' >Asiakasnumero: "+ParseSon[0].asiakasnumero+"</h2>");
+				$("#modalDialog").append("<h2 class='dialogHead' >Asiakas: "+ParseSon[0].Name+"</h2>");
+				//$("#modalDialog").append("<h2 class='dialogHead' >Asiakasnumero: "+ParseSon[0].asiakasnumero+"</h2>");
 				///// Tähän väliin tyot
 				//////Jokaisen löytyvän työobjetkin perusteella tungetaan näkymään työnro, info sekä status
-				$.each(ParseSon[0].tyot, function(key , value){
+				$.each(ParseSon[0].Works, function(key , value){
 				$("#modalDialog").append("<h3 class='dialogHead' >Työnro: "+value['tyonro']+", työn info: "+value['info']+", työn status: "+value['status']+"</h3>");
 				});			
 				//// tyot loppuu
@@ -117,25 +115,46 @@ function SetJobListener()
             $cur = $(this);
 
             $("#modalDialog").empty();
-			var jqxhr = $.ajax({
-							url: "php/tilaus.php",
-							type: "post"
-			});
+			var jqxhr = $.get( "php/Tilaus.php", { item: $(this).text() } );
+			
 			jqxhr.success(function(response, textStatus, jqXHR){
 
 			
 				var ParseSon = JSON.parse(response);
+				console.log(ParseSon);
 				$("#modalDialog").append("<h1 class='dialogHead' >Tilauksen tiedot</h1>");
 				
-				$("#modalDialog").append("<h3>Tilausnumero : "+ ParseSon[0].tyonro +"</h3>");
-				$("#modalDialog").append("<h4>Tilauksen status : "+ ParseSon[0].status +"</h4>");
+				$("#modalDialog").append("<h3>Tilausnumero : "+ ParseSon['infos'][0].WorkNumber +"</h3>");
+				$("#modalDialog").append("<h3>ItemCode : "+ ParseSon['infos'][0].ItemCode +"</h3>");
+				$("#modalDialog").append("<h4>Tilauksen status : "+ ParseSon['infos'][0].status1 +"</h4>");
 				$("#modalDialog").append("<h3>Tilauksen historia</h3>");
+				var historiaTable = "<div id='ScrollWOrksTalble'><table class='tableWorks' ><th class='thWorks' >Työvaiheen kuvaus</th><th class='thWorks' >Työkone</th><th class='thWorks' >Työtila</th>";
+						$.each(ParseSon ['Path'], function(key , value){
+							historiaTable += "<tr class='trWorks' ><td class='tdWorks'>"+value.Description+"</td><td class='tdWorks'>"+value.GroupID+"</td>";
+							if(value.StartTime == null)
+							{
+								historiaTable += "<td class='tdWorks'>Odottaa aloittamista</td>"
+							}
+							else if(value.StartTime != null && value.FinishTime == null)
+							{
+								historiaTable += "<td class='tdWorks'>Työ vaiheessa</td>"
+							}
+							else if(value.StartTime != null && value.FinishTime != null)
+							{
+								historiaTable += "<td class='tdWorks'>Suoritettu</td>"
+							}
+							historiaTable += "</tr>"
+						});
+						historiaTable += "</table></div>";
+						 $("#modalDialog").append(historiaTable);
+						 
+				$("#ScrollWOrksTalble").css("height", "300px");
 				
 				$("#modalDialog").dialog({
 					modal: true,
 					draggable: true,
 					position: { my: "center", at: "center", of: window },
-					width: 500,
+					width: 800,
 					buttons: {
 						"Sulje" : function(){
 							$(this).dialog("close");

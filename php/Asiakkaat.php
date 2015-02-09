@@ -1,12 +1,32 @@
 <?php
-$arr = array(array('nimi' => 'Antti Asiakas', 'tilaustenlkm' => 2), 
-			array('nimi' => 'Joulupukki', 'tilaustenlkm' => 5), 
-			array('nimi' => 'Aku Ankka', 'tilaustenlkm' => 313), 
-			array('nimi' => 'Esimerkki Asiakas', 'tilaustenlkm' => 1), 
-			array('nimi' => 'Etunimi Sukunimi', 'tilaustenlkm' => 10)
-			);
+require_once("db.inc");
 
-$jsonData = json_encode($arr);
-			
-echo $jsonData;
+if(isset($_GET['client']))
+{
+	$client = $_GET['client'];
+}
+else
+{
+	$client = ""; //Jos ei olla annettu haettavan asiakkaan nimeä, haetaan kaikki
+}
+
+$result = $conn->prepare("SELECT Count(clientorder.ClientID) AS Orders, Name FROM client
+						LEFT JOIN clientorder ON clientorder.ClientID = client.ClientID
+						WHERE Name LIKE :name
+						GROUP BY Name");
+$result->execute(array(':name' => '%'.$client.'%')); //Haetaan ne asiakkaat, joiden nimi sisältää haetun nimen
+
+$result2 = $conn->prepare("SELECT Count(*) FROM clientorder WHERE ClientID = :cID");
+
+$arr = array();
+
+while($r = $result->fetch(PDO::FETCH_ASSOC))
+{
+	$arr[] = $r;
+	//echo json_encode($r);
+}
+
+$JSONdata = json_encode($arr);
+echo $JSONdata;
+//print_r($arr);
 ?>

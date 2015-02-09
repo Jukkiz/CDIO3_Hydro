@@ -1,14 +1,45 @@
 <?php
-$arr = array(array('GroupID' => '12000',
-			'Machines' => array(array('MachineID' => '12100', 'ResourceName' => 'Laite 1'),
-					array('MachineID' => '12200', 'ResourceName' => 'Laite 2'),
-					array('MachineID' => '12300', 'ResourceName' => 'Laite 3')),
-			'Work' => array(array('WorkNumber' => 'TIL0001', 'Status' => '40'),
-					array('WorkNumber' => 'TIL0002', 'Status' => '43'),
-					array('WorkNumber' => 'TIL0003', 'Status' => '45')),
-			));
+require_once("db.inc");
 
-$jsonData = json_encode($arr);
-			
-echo $jsonData;
+if(isset($_GET['machine']))
+{
+	$group = $_GET['machine'];
+	$result = $conn->prepare("SELECT GroupID FROM Resource WHERE MachineID LIKE :group");
+	$result->execute(array(':group' => '%'.$group.'%'));
+	
+	$r = $result->fetch(PDO::FETCH_ASSOC);
+	$group = $r['GroupID'];
+}
+else
+{
+	$group = ""; //Jos ei olla annettu haettavan koneryhmän nimeä, haetaan kaikki
+}
+
+$machines = array();
+$works = array();
+
+$result = $conn->prepare("SELECT MachineID, ResourceName FROM Resource WHERE GroupID LIKE :group");
+$result->execute(array(':group' => '%'.$group.'%')); //Haetaan ne koneryhmät, joiden nimi sisältää haetun nimen
+
+while($r = $result->fetch(PDO::FETCH_ASSOC))
+{
+	$m_id = $r['MachineID'];
+	$r_name = $r['ResourceName'];
+	$machines[] = array('MachineID' => $m_id, 'ResourceName' => $r_name);
+}
+
+$result2 = $conn->prepare("SELECT WorkCard.WorkNumber, WorkCard.Status1 FROM WorkPhase INNER JOIN WorkCard ON WorkPhase.ItemCodePhase = WorkCard.ItemCode INNER JOIN Resource ON WorkPhase.GroupID = Resource.MachineID WHERE Resource.GroupID LIKE :group");
+
+$result2->execute(array(':group' => '%'.$group.'%'));
+while($r2 = $result2->fetch(PDO::FETCH_ASSOC))
+{
+	$worknumber = $r2['WorkNumber'];
+	$status = $r2['Status1'];
+	$works[] = array('WorkNumber' => $worknumber, 'Status' => $status);
+}
+
+$arr = array(array('GroupID' => $group, 'Machines' => $machines, 'Work' => $works));
+$JSONdata = json_encode($arr);
+
+echo $JSONdata;
 ?>
