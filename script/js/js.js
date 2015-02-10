@@ -6,7 +6,7 @@ var dialogY;
 
 $(document).ready(function(){
 	GetOrders();
-	var worksTimer = setInterval(GetOrders, 60*1000);
+	var worksTimer = setInterval(GetOrders, 2*1000);
 
 	var clientTimer;
 	
@@ -20,13 +20,13 @@ $(document).ready(function(){
 	
 	$("#Jugetyot").click(function(){
 		GetOrders();
-		worksTimer = setInterval(GetOrders, curSpeed * (60*1000));
+		worksTimer = setInterval(GetOrders, curSpeed * (5*1000));
 		clearInterval(clientTimer);
 	});
 	
 	$("#JugeAsiakkaat").click(function(){
 		GetClients();
-		clientTimer = setInterval(GetClients, 60*1000);
+		clientTimer = setInterval(GetClients, 2*1000);
 		clearInterval(worksTimer);
 		
 	});
@@ -72,7 +72,7 @@ function SetClientListener()
 	$(".jobRow").click(function(){
             $(this).addClass("active");
             $cur = $(this);
-
+			
 			$("#modalDialog").empty();
 			
 			var jqxhr = $.get( "php/asiakas.php", { client: $(this).text() } );
@@ -86,9 +86,14 @@ function SetClientListener()
 				//$("#modalDialog").append("<h2 class='dialogHead' >Asiakasnumero: "+ParseSon[0].asiakasnumero+"</h2>");
 				///// Tähän väliin tyot
 				//////Jokaisen löytyvän työobjetkin perusteella tungetaan näkymään työnro, info sekä status
-				$.each(ParseSon[0].Works, function(key , value){
-				$("#modalDialog").append("<h3 class='dialogHead' >Työnro: "+value['tyonro']+", työn info: "+value['info']+", työn status: "+value['status']+"</h3>");
-				});			
+				var historiaTable = "<div id='ScrollWOrksTalble'><table class='tableWorks' ><th class='thWorks' >Työnumero</th><th class='thWorks' >Työn status</th>";
+						$.each(ParseSon[0]['Works'], function(key , value){
+							historiaTable += "<tr class='trWorks' ><td class='tdWorks'>"+value.WorkNumber+"</td><td class='tdWorks'>"+value.Status1+"</td>";
+						});
+				historiaTable += "</table></div>";
+				$("#modalDialog").append(historiaTable);
+						 
+				$("#ScrollWOrksTalble").css("max-height", "300px");
 				//// tyot loppuu
 				//
 				$("#modalDialog").dialog({

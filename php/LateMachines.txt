@@ -1,0 +1,13 @@
+<?php
+require_once("db.inc");
+
+$result = $conn->prepare("SELECT GroupID FROM `workphase` WHERE ( NOW() > WorkPhase.End AND WorkPhase.FinishTIme IS NULL AND workphase.StartTIme IS NOT NULL)");
+$result->execute(array());
+$array ;
+
+$array = $result2->fetch(PDO::FETCH_ASSOC);
+$JSONdata = json_encode($arr);
+
+echo $JSONdata;
+
+?>

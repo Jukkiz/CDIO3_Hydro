@@ -1,3 +1,16 @@
+function getLateMachines(curr_area){
+	var jqxhr = $.ajax({
+					url: "php/LateMachines.php",
+					type: "post"
+		});
+		jqxhr.success(function(response, textStatus, jqXHR){
+			ParseSon = JSON.parse(response);
+			console.log(ParseSon);
+			$.each(ParseSon, function(key , value){
+				AlertArea(value.GroupID, curr_area);
+			});
+		});
+}
 //Funktio hakee töiden lukumäärät eri alueilla!
 	function getJobCount() {
 
@@ -78,22 +91,62 @@ function DrawInfoBoxes()
 
 	}
 }
+function machinejobsinfo()
+{
+	var jqxhr = $.ajax({
+					url: "php/machineJobCOunt.php",
+					type: "post"
+		});
+		jqxhr.success(function(response, textStatus, jqXHR){
+			MachineJobsCOunts = JSON.parse(response);
+			console.log("Työkoneet");
+			console.log(MachineJobsCOunts);
+		});
+}
 //punanen neliö koneen päällä jos siinä jotain hälyttävää!!!
 function AlertArea(MachineID, SelectedArea)
 {
+	//console.log("Työt");
+	//console.log(SelectedArea);
 	SelectedArea = setZoomedImages(canvas.width, canvas.height, SelectedArea);
-	infos.globalAlpha = 0.5;
-	
+	infos.globalAlpha = 0.9;
+	//console.log(SelectedArea);
+
 	for( var i = 0 ; i < SelectedArea.length ; i++)
 	{
 		test = SelectedArea[i];
-
+		//console.log("outside");
 		if(test.id == MachineID)
 		{
+			//console.log(SelectedArea[i]);
 			infos.fillStyle = "#FF9999";
 		    infos.fillRect(test.posX, test.posY, test.sizeX, test.sizeY);
 		}
+		infos.strokeStyle = "#FF9999";
+		infos.lineWidth = 5;
+		infos.fillStyle = "#ffffff";
+		infos.fillRect((SelectedArea[i].posX + SelectedArea[i].sizeX) - (SelectedArea[i].sizeX/2) - 80, SelectedArea[i].posY + 50, 200, 100); 
+		infos.strokeRect((SelectedArea[i].posX + SelectedArea[i].sizeX) - (SelectedArea[i].sizeX/2) - 80, SelectedArea[i].posY + 50, 200, 100); 
+		
+		//Info laatikoiden teksti sisältö
+		//Otsikko
+		var str = "Kone " + SelectedArea[i].id;
+		infos.font="24px Arial";
+		infos.fillStyle = "#000000";
+		infos.fillText(str,(SelectedArea[i].posX + SelectedArea[i].sizeX) - (SelectedArea[i].sizeX/2) - 70, SelectedArea[i].posY  + 85);
+		//Töiden lkm!
+				
+		$.each(MachineJobsCOunts, function(key , value){
+			if(value.GroupID == test.id)
+			{
+				var str = "Töiden lukumäärä " + value.JobCount;
+				infos.font="14px Arial";
+				infos.fillStyle = "#000000";
+				infos.fillText(str,(SelectedArea[i].posX + SelectedArea[i].sizeX) - (SelectedArea[i].sizeX/2) - 70, SelectedArea[i].posY + 115);
+			}
+		});
 	}
+	
 }
 function ClearInfos()
 {
@@ -216,8 +269,9 @@ function checkArea (mouseX, mouseY, area) {
 	var canvas, context, images, area, tooltip, tipcontext;
 	var img, posX, posY, sizeY, sizeX, pw, ph;
 	var curr_area;
+	var MachineJobsCOunts = null;
 	var AreasJobCounts; // objekti työ lukumäärälle
-	//var worksCount = setInterval(getJobCount, 60*1000); //Timeri hakee töiden lkm joka x sekuntti
+	var worksCount = setInterval(getJobCount, 2*1000); //Timeri hakee töiden lkm joka x sekuntti
 
 	var zoomed = new Boolean(0); //tsekataan onko zoom
 	//window.onresize = setCanvas; <-- onko tämä sama asia kun addEventListener? toimii molemmilla.
@@ -243,14 +297,15 @@ function checkArea (mouseX, mouseY, area) {
 				
 				curr_area = area[i];
 				if(checkArea(mx, my, curr_area)) {
-					//clearInterval(worksCount);	
+					clearInterval(worksCount);	
 					ctx.clearRect(0,0,canvas.width, canvas.height);
 					drawBackButton();//takas nappi
 					
 					ClearInfos();
-					AlertArea(12141, area[i]);
+					//AlertArea(12141, area[i]); piirtää punasen neliön
 					drawImages(curr_area);
-					
+					machinejobsinfo();
+					getLateMachines(curr_area);
 					zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
 					i = area.length;			
 				}
@@ -265,7 +320,7 @@ function checkArea (mouseX, mouseY, area) {
 					drawImages();
 					ClearInfos();
 					DrawInfoBoxes();
-					//worksCount = setInterval(getJobCount, 60*1000);
+					worksCount = setInterval(getJobCount, 2*1000);
 			}
 			
 
