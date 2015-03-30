@@ -1,4 +1,11 @@
-﻿<html>
+﻿<?php
+session_start();
+if(!isset($_SESSION['user']))
+{
+	Header ("Location: Login.php");
+} 
+?>
+<html>
 	<head>
 		 <link rel="stylesheet" type="text/css" media="(max-width: 1980px)" href="style/mainstyle.css">
 		 <meta charset="UTF-8"> 
