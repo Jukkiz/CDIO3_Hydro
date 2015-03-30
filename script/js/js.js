@@ -9,6 +9,7 @@ $(document).ready(function(){
 	var worksTimer = setInterval(GetOrders, 2*1000);
 
 	var clientTimer;
+	var WorkingMachineTimer = setInterval(GetWorkingMachines, 1000);
 	
 	var buttonLocation = $("#settingsButton").position();
 	dialogX = buttonLocation.left - $("#settingsButton").width() - 150;
@@ -31,7 +32,20 @@ $(document).ready(function(){
 		
 	});
 });
-
+function GetWorkingMachines()
+{
+	var jqxhr = $.ajax({
+				url: "php/WorkingMachines.php",
+				type: "post"
+	});
+	jqxhr.success(function(response, textStatus, jqXHR){
+		var ParseSon = JSON.parse(response);
+		console.log(ParseSon);
+		$.each(ParseSon, function(key, value){
+			console.log(value.GroupID);
+		});
+	});
+}
 function GetOrders()
 {
 	$(".jobsTable").empty()
