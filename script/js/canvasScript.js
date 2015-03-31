@@ -1,3 +1,74 @@
+function MachineToolTip(mouseX, mouseY){
+	ToolHit = new Boolean(0);
+	$.each(images, function(index, val){
+		if ((val.posX <= mouseX) && (val.posX + val.sizeX >= mouseX) &&
+		(val.posY <= mouseY) && (val.posY + val.sizeY >= mouseY)){
+			
+			tooltip.style.left = ((val.posX + val.sizeX) ) + "px";
+				
+			tooltip.style.top = (val.posY + 20) + "px";
+			tipcontext.clearRect(0,0, tooltip.width, tooltip.height);
+				
+			//fontti pitäisi määrittää canvasin koon mukaan varmaan jo heti alkuunsa, pitää korjata!
+			tipcontext.font = 'italic 30pt Calibri';
+			tipcontext.fillText("Kone: " + val.id, 10, 50);
+			if(typeof  val.WorkNumber != "undefined"){
+				tipcontext.fillText("TyöNumero: " + val.WorkNumber, 10, 80);
+				tipcontext.fillText("Kuvaus: " + val.Description, 10, 110);
+			}
+			else{
+				tipcontext.fillText("Kone on vapaa", 10, 80);
+			}
+			
+			ToolHit = true;
+		}
+		
+	});
+	if(ToolHit == false){
+		tooltip.style.left = "-200px";
+	}
+}
+//Etsii koneet päänäkymässä, jotka työtä tekevät
+function getCurrentWorks(){
+	hit = new Boolean(0);
+	if(zoomed == false){
+		var jqxhr = $.ajax({
+					url: "php/WorkingMachines.php",
+					type: "post"
+		});
+		jqxhr.success(function(response, textStatus, jqXHR){
+			ParseSon = JSON.parse(response);
+			
+			$.each(images, function(index, val){
+				hit = false;
+				$.each(ParseSon, function(key , value){
+					if(value.GroupID == val.id)
+					{
+						TrafficLight(val, "#FF1919");
+						images[index].WorkNumber = value.WorkNumber;
+						images[index].Description = value.Description;
+						hit = true;
+					}
+				});
+				if(hit == false){
+					TrafficLight(val, "#52CC52");
+				}
+			});
+			
+		});
+	}
+}
+function TrafficLight(Item, Color){
+	infos.clearRect(Item.posX, Item.posY, Item.sizeX, Item.sizeY)
+	infos.globalAlpha = 0.5;
+	infos.strokeStyle = "#000000";
+	infos.lineWidth = 5;
+	infos.fillStyle = Color;
+						
+	infos.fillRect(Item.posX, Item.posY, Item.sizeX, Item.sizeY); 
+	infos.strokeRect(Item.posX , Item.posY, Item.sizeX, Item.sizeY); 
+}
+//Etsii myöhästyneet työt koneelle
 function getLateMachines(curr_area){
 	var jqxhr = $.ajax({
 					url: "php/LateMachines.php",
@@ -58,6 +129,7 @@ function getLateMachines(curr_area){
 //Jokaisen alueen tiedot esitettynä!
 function DrawInfoBoxes()
 {
+	/*
 	infos.clearRect(0,0, infos.width, infos.height);
 	console.log(AreasJobCounts);
 	
@@ -90,6 +162,7 @@ function DrawInfoBoxes()
 		infos.fillText(str,(Areas[i].posX + Areas[i].sizeX) - (Areas[i].sizeX/2) + 10, Areas[i].posY + 135);
 
 	}
+	*/
 }
 function machinejobsinfo()
 {
@@ -271,7 +344,8 @@ function checkArea (mouseX, mouseY, area) {
 	var curr_area;
 	var MachineJobsCOunts = null;
 	var AreasJobCounts; // objekti työ lukumäärälle
-	var worksCount = setInterval(getJobCount, 2*1000); //Timeri hakee töiden lkm joka x sekuntti
+	var worksCount = setInterval(getJobCount, 2*1000);
+	var CurrentWorksInterval = setInterval(getCurrentWorks, 2*1000);	//Timeri hakee töiden lkm joka x sekuntti
 
 	var zoomed = new Boolean(0); //tsekataan onko zoom
 	//window.onresize = setCanvas; <-- onko tämä sama asia kun addEventListener? toimii molemmilla.
@@ -417,6 +491,7 @@ function checkArea (mouseX, mouseY, area) {
 
         if (zoomed == false) {
 
+		MachineToolTip(mx, my);
         for (i = 0; i < area.length; i++) {
 
 			curr_area = area[i];
@@ -426,7 +501,7 @@ function checkArea (mouseX, mouseY, area) {
             	ctx.clearRect(area[i].posX - 5, area[i].posY - 5, area[i].sizeX + 10, area[i].sizeY + 10);
             	ctx.globalAlpha = 0.3;
             	ctx.fillStyle = "#99CCFF";
-            	ctx.fillRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY);
+            	//ctx.fillRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY);
               	ctx.strokeStyle = "#0033CC";
               	ctx.lineWidth=10;
               	ctx.strokeRect(area[i].posX, area[i].posY, area[i].sizeX, area[i].sizeY); 

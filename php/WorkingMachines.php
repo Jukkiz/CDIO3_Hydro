@@ -1,6 +1,6 @@
 <?php
 require_once("db.inc");
-$result = $conn->prepare("SELECT GroupID FROM workphase WHERE StartTime IS NOT NULL AND FinishTime IS NULL");
+$result = $conn->prepare("SELECT GroupID, WorkNumber, Description FROM workphase WHERE StartTime IS NOT NULL AND FinishTime IS NULL");
 $result->execute();
 $array ;
 
