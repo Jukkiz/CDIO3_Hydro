@@ -28,6 +28,38 @@ function MachineToolTip(mouseX, mouseY){
 		tooltip.style.left = "-200px";
 	}
 }
+function getZoomedWorks(CurrArea){
+	
+	hit = new Boolean(0);
+		var jqxhr = $.ajax({
+					url: "php/WorkingMachines.php",
+					type: "post"
+		});
+		jqxhr.success(function(response, textStatus, jqXHR){
+			ParseSon = JSON.parse(response);
+			
+			$.each(zoomedImages, function(index, val){
+
+				if(val.parent == CurrArea.id){
+					hit = false;
+					$.each(ParseSon, function(key , value){
+						if(value.GroupID == val.id)
+						{
+							
+							TrafficLight(val, "#FF1919");
+							images[index].WorkNumber = value.WorkNumber;
+							images[index].Description = value.Description;
+							hit = true;
+						}
+					});
+					if(hit == false){
+						TrafficLight(val, "#52CC52");
+					}
+				}
+			});
+			
+		});
+}
 //Etsii koneet päänäkymässä, jotka työtä tekevät
 function getCurrentWorks(){
 	hit = new Boolean(0);
@@ -379,7 +411,8 @@ function checkArea (mouseX, mouseY, area) {
 					//AlertArea(12141, area[i]); piirtää punasen neliön
 					drawImages(curr_area);
 					machinejobsinfo();
-					getLateMachines(curr_area);
+					//getLateMachines(curr_area);
+					getZoomedWorks(curr_area);
 					zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
 					i = area.length;			
 				}
