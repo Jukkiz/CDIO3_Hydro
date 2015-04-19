@@ -1,13 +1,22 @@
 var WIDTH = $(window).width();
 var HEIGHT = $(window).height();
 var curSpeed = 1; //Kerroin updatelle
+var tablePage = 0;
 var dialogX;
 var dialogY;
+var foundSomething = new Boolean(0);
+var searchTerm;
+var hakuFlag = new Boolean(0);
+var WorkFlag = new Boolean(0);
+var ClientFlag = new Boolean(0);
 
 $(document).ready(function(){
-	GetOrders();
-	var worksTimer = setInterval(GetOrders, 2*1000);
-
+	GetOrders("", 0);
+	hakuFlag = false;
+	WorkFlag = false;
+	ClientFlag = false;
+	
+	$("#prevPageButton").attr("disabled", true);
 	var clientTimer;
 	var WorkingMachineTimer = setInterval(GetWorkingMachines, 1000);
 	
@@ -20,18 +29,76 @@ $(document).ready(function(){
 	$(".settingsDialog").css("top", dialogY);
 	
 	$("#Jugetyot").click(function(){
-		GetOrders();
-		worksTimer = setInterval(GetOrders, curSpeed * (5*1000));
-		clearInterval(clientTimer);
+		hakuFlag = false;
+		WorkFlag = true;
+		ClientFlag = false;
+		
+		tablePage = 0;
+		DoSearch();
 	});
 	
 	$("#JugeAsiakkaat").click(function(){
-		GetClients();
-		clientTimer = setInterval(GetClients, 2*1000);
-		clearInterval(worksTimer);
+		hakuFlag = false;
+		WorkFlag = false;
+		ClientFlag = true;
+		
+		tablePage = 0;
+		DoSearch();
+	});
+	
+	$("#SearchButton").click(function(){
+		hakuFlag = true;
+		WorkFlag = false;
+		ClientFlag = false;
+		
+		DoSearch();
+	});
+	$("#prevPageButton").click(function(){
+		tablePage--;
+		DoSearch();
+		
+		if(tablePage == 0)
+		{
+			$("#prevPageButton").attr("disabled", true);
+		}
 		
 	});
+	$("#nextPageButton").click(function(){
+		$("#prevPageButton").attr("disabled", false);
+		tablePage++;
+		DoSearch();
+	});
+	
+	$('#SearchInput').keyup(function(e){
+		if(e.keyCode == 13)
+		{
+			hakuFlag = true;
+			WorkFlag = false;
+			ClientFlag = false;
+		
+			tablePage = 0;
+			DoSearch();
+		}
+	});
 });
+function DoSearch()
+{
+	foundSomething = false;
+	if(hakuFlag == true)
+	{
+		searchTerm = $( "#SearchInput" ).val();
+		GetOrders(searchTerm, tablePage);
+		GetClients(searchTerm, tablePage);
+	}
+	else if(WorkFlag == true)
+	{
+		GetOrders(searchTerm, tablePage);
+	}
+	else
+	{
+		GetClients("", tablePage);
+	}
+}
 function GetWorkingMachines()
 {
 	var jqxhr = $.ajax({
@@ -46,31 +113,27 @@ function GetWorkingMachines()
 		});
 	});
 }
-function GetOrders()
+function GetOrders(ItemName, page)
 {
 	$(".jobsTable").empty()
-	var jqxhr = $.ajax({
-				url: "php/tilaukset.php",
-				type: "post"
-	});
+	var jqxhr = $.get("php/tilaukset.php", { item : ItemName ,itemPage : page });
 	jqxhr.success(function(response, textStatus, jqXHR){
 		
 		var ParseSon = JSON.parse(response);
-		console.log(ParseSon);
-		$.each(ParseSon, function(key, value){
 
-			$(".jobsTable").append("<tr><td class='jobRow'><p>"+value.WorkNumber+"</p></td></tr>");		
-		});
-		SetJobListener();
+			foundSomething = true;
+			console.log(ParseSon);
+			$.each(ParseSon, function(key, value){
+
+				$(".jobsTable").append("<tr><td class='jobRow'><p>"+value.WorkNumber+"</p></td></tr>");		
+			});
+			SetJobListener();
 	});
 }
-function GetClients()
+function GetClients(clientName, page)
 {
 	$(".jobsTable").empty()
-	var jqxhr = $.ajax({
-				url: "php/Asiakkaat.php",
-				type: "post"
-	});
+	var jqxhr = $.get("php/Asiakkaat.php", { client : clientName, itemPage : page });
 	jqxhr.success(function(response, textStatus, jqXHR){
 		var ParseSon = JSON.parse(response);
 		

@@ -12,14 +12,14 @@ else
 
 if(isset($_GET['itemPage']))
 {
-	$itemPage = $_GET['itemPage'];
+	$itemPage = 10 * $_GET['itemPage'];
 }
 else
 {
 	$itemPage = 0;
 }
 
-$result = $conn->prepare("SELECT WorkNumber, Info, Status1 FROM workcard WHERE ItemCode LIKE :ic LIMIT :page, 10 ");
+$result = $conn->prepare("SELECT WorkNumber, Info, Status1 FROM workcard WHERE ItemCode LIKE :ic OR WorkNumber LIKE :ic LIMIT :page, 10 ");
 $result->bindParam(':page', $itemPage, PDO::PARAM_INT);
 $result->bindParam(':ic', $item, PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT, 20);
 $result->execute();

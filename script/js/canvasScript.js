@@ -1,31 +1,64 @@
-function MachineToolTip(mouseX, mouseY){
+function MachineToolTip(mouseX, mouseY, imagearray){
 	ToolHit = new Boolean(0);
-	$.each(images, function(index, val){
-		if ((val.posX <= mouseX) && (val.posX + val.sizeX >= mouseX) &&
-		(val.posY <= mouseY) && (val.posY + val.sizeY >= mouseY)){
-			
-			tooltip.style.left = ((val.posX + val.sizeX) ) + "px";
+	if(zoomed == false)
+	{
+		$.each(images, function(index, val){
+			if ((val.posX <= mouseX) && (val.posX + val.sizeX >= mouseX) &&
+			(val.posY <= mouseY) && (val.posY + val.sizeY >= mouseY)){
 				
-			tooltip.style.top = (val.posY + 20) + "px";
-			tipcontext.clearRect(0,0, tooltip.width, tooltip.height);
+				tooltip.style.left = ((val.posX + val.sizeX) ) + "px";
+					
+				tooltip.style.top = (val.posY + 20) + "px";
+				tipcontext.clearRect(0,0, tooltip.width, tooltip.height);
+					
+				//fontti pitäisi määrittää canvasin koon mukaan varmaan jo heti alkuunsa, pitää korjata!
+				tipcontext.font = 'italic 30pt Calibri';
+				tipcontext.fillText("Kone: " + val.id, 10, 50);
+				if(typeof  val.WorkNumber != "undefined"){
+					tipcontext.fillText("TyöNumero: " + val.WorkNumber, 10, 80);
+					tipcontext.fillText("Kuvaus: " + val.Description, 10, 110);
+				}
+				else{
+					tipcontext.fillText("Kone on vapaa", 10, 80);
+				}
 				
-			//fontti pitäisi määrittää canvasin koon mukaan varmaan jo heti alkuunsa, pitää korjata!
-			tipcontext.font = 'italic 30pt Calibri';
-			tipcontext.fillText("Kone: " + val.id, 10, 50);
-			if(typeof  val.WorkNumber != "undefined"){
-				tipcontext.fillText("TyöNumero: " + val.WorkNumber, 10, 80);
-				tipcontext.fillText("Kuvaus: " + val.Description, 10, 110);
-			}
-			else{
-				tipcontext.fillText("Kone on vapaa", 10, 80);
+				ToolHit = true;
 			}
 			
-			ToolHit = true;
+		});
+		if(ToolHit == false){
+			tooltip.style.left = "-200px";
 		}
-		
-	});
-	if(ToolHit == false){
-		tooltip.style.left = "-200px";
+	}
+	else
+	{
+		$.each(imagearray, function(index, val){
+			if ((val.posX <= mouseX) && (val.posX + val.sizeX >= mouseX) &&
+			(val.posY <= mouseY) && (val.posY + val.sizeY >= mouseY)){
+				
+				tooltip.style.left = ((val.posX + val.sizeX) ) + "px";
+					
+				tooltip.style.top = (val.posY + 20) + "px";
+				tipcontext.clearRect(0,0, tooltip.width, tooltip.height);
+					
+				//fontti pitäisi määrittää canvasin koon mukaan varmaan jo heti alkuunsa, pitää korjata!
+				tipcontext.font = 'italic 30pt Calibri';
+				tipcontext.fillText("Kone: " + val.id, 10, 50);
+				if(typeof  val.WorkNumber != "undefined"){
+					tipcontext.fillText("TyöNumero: " + val.WorkNumber, 10, 80);
+					tipcontext.fillText("Kuvaus: " + val.Description, 10, 110);
+				}
+				else{
+					tipcontext.fillText("Kone on vapaa", 10, 80);
+				}
+				
+				ToolHit = true;
+			}
+			
+		});
+		if(ToolHit == false){
+			tooltip.style.left = "-200px";
+		}
 	}
 }
 function getZoomedWorks(CurrArea){
@@ -339,11 +372,11 @@ function checkArea (mouseX, mouseY, area) {
 				}
 				else if(area.id == "bottom_left") {
 					context.translate(0,-canvas.height);
-					context.scale(2,2);	
+					context.scale(1.8,2);	
 				}
 				else if (area.id == "bottom_right") {
-					context.translate(-canvas.width, -canvas.height);
-					context.scale(2.2,2.8);
+					context.translate(-canvas.width/1.2 , -canvas.height/1.7);
+					context.scale(1.85,1.8);
 				}
 				ctx.clearRect(0,0,canvas.width, canvas.height);
 				drawBackButton();
@@ -351,7 +384,7 @@ function checkArea (mouseX, mouseY, area) {
 			images = setImages(canvas.width, canvas.height);
 			context.drawImage(img, 0, 0, canvas.width, canvas.height);
 	
-			
+			/*
 			for (var i = 0; i< images.length;i++) {
 					
 					var imgSource = new Image();
@@ -362,10 +395,10 @@ function checkArea (mouseX, mouseY, area) {
 						context.drawImage(this, images[i].posX, images[i].posY, images[i].sizeX, images[i].sizeY );
 					};	
 				})(i);				
-			}
+			}*/
 		};
 		//img.src = "testi.jpg";;
-	   img.src = "images/testipohja.jpg";
+	   img.src = "images/testipohja2.jpg";
 	}
 //------------------------------------------------------------//
 
@@ -567,7 +600,7 @@ function checkArea (mouseX, mouseY, area) {
    		else
    		{
    			zoomedImages = setZoomedImages(canvas.width, canvas.height, curr_area);
-
+			MachineToolTip(mx, my, zoomedImages);
 			for(i=0; i< images.length; i++) {
 		
 				var element = zoomedImages[i];

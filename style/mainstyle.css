@@ -20,7 +20,53 @@ td, tr
 	border-bottom: 1px solid;
 	font-size: 9px;
 }
-
+.TableControlForward, .TableControlBefore{
+	background: #950006;
+    border: none;
+    display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    position: relative;
+    text-decoration: none;
+    width: 80px
+}
+#ControlButtonsDiv{
+	padding-left:13px;
+	padding-right:13px;
+	padding-top:10px;
+}
+.TableControlForward:before, .TableControlBefore:before{
+    background: #950006;
+    border: none;
+    content: '';
+    display: block;
+    height: 20px;
+    position: absolute;
+    top: 4px;
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    width: 21px;
+}
+.TableControlForward{
+	float:right;
+}
+.TableControlForward:before{
+	left: 70px;
+}
+.TableControlBefore:before{
+	left: -10px;
+}
+.linkbutton{
+	color: #fff;
+    background: none;
+    border: none;
+    font-weight: bold;
+    position: relative;
+    width: 70px;
+    height: 28px;
+}
 #settingsButton{
 	float: right;
 }

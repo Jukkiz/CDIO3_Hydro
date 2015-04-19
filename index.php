@@ -34,8 +34,8 @@ if(!isset($_SESSION['user']))
 		<div class="rightPanel">
 			<input type="button" class="JugeButton" id="settingsButton" value="Asetukset" onClick="showSettings()"></input>
 			<div id="searchDiv">
-				<input type="text" class="searchField" id="searchBox"></input>
-				<input type="button" value="Hae" class="floatLeft"></input>
+				<input type="text" id="SearchInput" class="searchField" id="searchBox"></input>
+				<input type="button" id="SearchButton" value="Hae" class="floatLeft"></input>
 			</div>
 			<div id="buttonDiv">
 				<input type="button" id="Jugetyot" value="Työt" class="JugeButton"></input>
@@ -44,8 +44,12 @@ if(!isset($_SESSION['user']))
 			<!-- Tablen runko, sisältö AJAXista -->
 			<div id="scrollTable">
 				<table class="jobsTable"></table>
-			</div>	
-				<div class="info">
+			</div>		
+			<div id="ControlButtonsDiv">
+				<a class="TableControlBefore" ><button id="prevPageButton" value="Edelliset" class="linkbutton" >Edelliset</button></a>
+				<a class="TableControlForward" ><button id="nextPageButton" value="Seuraavat" class="linkbutton" >Seuraavat</button></a>
+			</div>			
+			<div class="info">
 				<p>Tarkempaa informaatiota koskien valittua tilausta <br></br>(Ylemmässä aktiivisena)</p>
 			</div>
 		</div>
